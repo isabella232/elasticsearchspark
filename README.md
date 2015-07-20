@@ -43,7 +43,7 @@ Note: You'll need Java 1.7. In case you need to manage different versions of Jav
 
 3.  Postman
 
-Chrome app, install via Chrome App manager.
+* Chrome app, install via Chrome App manager.
 
 4.  Kibana
 
@@ -66,7 +66,7 @@ Setup:
 
 4.  Get Twitter credentials
 
-Add Twitter app on dev.twitter.com and get the following:
+* Add Twitter app on dev.twitter.com and get the following:
 
 - Key
 - Secret Key
@@ -75,13 +75,13 @@ Add Twitter app on dev.twitter.com and get the following:
 
 5.  Run elasticsearchspark 
 
-Usage: <master> <key> <secret key> <access token> <access token secret>  <es-resource>
+* Usage: <master> <key> <secret key> <access token> <access token secret>  <es-resource>
 	
 	> run spark://racso.corp.xoom.com:7077 <key> <secret key> <access token> <access token secret> twitter/tweet
 	
 6.  Choose option to run
 
-You will be presented with the following:
+* You will be presented with the following:
 
 	Multiple main classes detected, select one to run:
 
@@ -92,25 +92,25 @@ You will be presented with the following:
 
 	 Enter number: 
 
-Choose whichever option you'd like to run.
+* Choose whichever option you'd like to run.
 
 7.  Do a GET/POST on your index.
 
-You can use Postman to do a GET on your index:
+* You can use Postman to do a GET on your index:
 
 	GET http://localhost:9200/twitter/tweet/_search
 
 8.  Run Kibana
 
-On your terminal get Kibana running
+* On your terminal get Kibana running
 
 	$ kibana
 
-Then:
-- Access Kibana on localhost:5601 with you web browser. 
-- Configure an index pattern on 'Settings'
-- Go to discover to run a search against your index.
-- Run visualizations against your index.
+* Then:
+	- Access Kibana on localhost:5601 with you web browser. 
+	- Configure an index pattern on 'Settings'
+	- Go to discover to run a search against your index.
+	- Run visualizations against your index.
 
 
 
