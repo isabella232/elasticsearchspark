@@ -35,7 +35,7 @@ Available here: http://www.scala-sbt.org/release/tutorial/Setup.html
 
 Note: You'll need Java 1.7. In case you need to manage different versions of Java on your machine you can use jenv (see [4]).
 
-[4] http://www.jenv.be
+* [4] http://www.jenv.be
 
 2.  Elasticsearch
 
@@ -77,23 +77,20 @@ Add Twitter app on dev.twitter.com and get the following:
 
 Usage: <master> <key> <secret key> <access token> <access token secret>  <es-resource>
 	
-Example:
 	> run spark://racso.corp.xoom.com:7077 <key> <secret key> <access token> <access token secret> twitter/tweet
 	
 6.  Choose option to run
 
 You will be presented with the following:
 
-===>
-Multiple main classes detected, select one to run:
+	Multiple main classes detected, select one to run:
 
- [1] com.holdenkarau.esspark.IndexTweetsLive
- [2] com.holdenkarau.esspark.ReIndexTweets
- [3] com.holdenkarau.esspark.TopTweetsInALocation
- [4] com.holdenkarau.esspark.TopTweetsInALocationWithSQL
+	 [1] com.holdenkarau.esspark.IndexTweetsLive
+	 [2] com.holdenkarau.esspark.ReIndexTweets
+	 [3] com.holdenkarau.esspark.TopTweetsInALocation
+	 [4] com.holdenkarau.esspark.TopTweetsInALocationWithSQL
 
-Enter number: 
-<===
+	 Enter number: 
 
 Choose whichever option you'd like to run.
 
@@ -101,7 +98,7 @@ Choose whichever option you'd like to run.
 
 You can use Postman to do a GET on your index:
 
-GET http://localhost:9200/twitter/tweet/_search
+	GET http://localhost:9200/twitter/tweet/_search
 
 8.  Run Kibana
 
