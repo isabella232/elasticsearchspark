@@ -8,9 +8,9 @@ Introduction
 
 This project is based on Holden Karau's 'elasticsearchspark' project. Holden's talk is available in YouTube [2] and his slides can be found at [3].
 
-[1] https://github.com/holdenk/elasticsearchspark
-[2] https://youtu.be/jYicnlunDQ0
-[3] https://spark-summit.org/2014/wp-content/uploads/2014/07/Streamlining-Search-Indexing-using-Elastic-Search-and-Spark-Holden-Karau.pdf
+* [1] https://github.com/holdenk/elasticsearchspark
+* [2] https://youtu.be/jYicnlunDQ0
+* [3] https://spark-summit.org/2014/wp-content/uploads/2014/07/Streamlining-Search-Indexing-using-Elastic-Search-and-Spark-Holden-Karau.pdf
 
 Notes:
 ======
@@ -19,15 +19,17 @@ Holden's 'build.sbt' uses '2.1.0.Beta2-holdenmagic' for 'elasticsearch-hadoop'. 
 
 We also added some additional resolvers:
 
-   "clojars" at "https://clojars.org/repo",
-   "conjars" at "http://conjars.org/repo",
+   * "clojars" at "https://clojars.org/repo",
+   * "conjars" at "http://conjars.org/repo",
+   
+We're indexing createdAt and source, and we filter source to distinguish web/mobile.
       
 Requirements:
 =============
 
 Here are instructions to get this working on Mac OS X (Mavericks).
 
-1. Scala sbt
+1.  Scala sbt
 
 Available here: http://www.scala-sbt.org/release/tutorial/Setup.html
 
@@ -35,34 +37,34 @@ Note: You'll need Java 1.7. In case you need to manage different versions of Jav
 
 [4] http://www.jenv.be
 
-2. Elasticsearch
+2.  Elasticsearch
 
-$ brew install elasticsearch
+	$ brew install elasticsearch
 
-3. Postman
+3.  Postman
 
 Chrome app, install via Chrome App manager.
 
-4. Kibana
+4.  Kibana
 
-$ brew install kibana
+	$ brew install kibana
 
 Setup:
 ======
 
-1. Clone repo
+1.  Clone repo
 
-$ git clone ssh://git@git.corp.xoom.com:7999/~ocastaneda/elasticsearchspark.git
+	$ git clone ssh://git@git.corp.xoom.com:7999/~ocastaneda/elasticsearchspark.git
 
-2. cd to project's main dir
+2.  cd to project's main dir
 
-$ cd elasticsearchspark
+	$ cd elasticsearchspark
 
-3. Run 'sbt'
+3.  Run 'sbt'
 
-$ sbt
+	$ sbt
 
-4. Get Twitter credentials
+4.  Get Twitter credentials
 
 Add Twitter app on dev.twitter.com and get the following:
 
@@ -71,14 +73,14 @@ Add Twitter app on dev.twitter.com and get the following:
 - Access Token
 - Access Token Secret
 
-5. Run elasticsearchspark 
+5.  Run elasticsearchspark 
 
 Usage: <master> <key> <secret key> <access token> <access token secret>  <es-resource>
 	
 Example:
-> run spark://racso.corp.xoom.com:7077 <key> <secret key> <access token> <access token secret> twitter/tweet
+	> run spark://racso.corp.xoom.com:7077 <key> <secret key> <access token> <access token secret> twitter/tweet
 	
-6. Choose option to run
+6.  Choose option to run
 
 You will be presented with the following:
 
@@ -95,17 +97,17 @@ Enter number:
 
 Choose whichever option you'd like to run.
 
-7. Do a GET/POST on your index.
+7.  Do a GET/POST on your index.
 
 You can use Postman to do a GET on your index:
 
 GET http://localhost:9200/twitter/tweet/_search
 
-8. Run Kibana
+8.  Run Kibana
 
 On your terminal get Kibana running
 
-$ kibana
+	$ kibana
 
 Then:
 - Access Kibana on localhost:5601 with you web browser. 
