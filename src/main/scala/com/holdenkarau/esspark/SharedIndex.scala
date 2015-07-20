@@ -12,8 +12,20 @@ import org.apache.hadoop.io.{MapWritable, Text, NullWritable}
 // twitter imports
 import twitter4j.Status
 import twitter4j.TwitterFactory
+//import java.util.Date
+//import java.sql.Date
 
-case class tweetCS(docid: String, message: String, hashTags: String, location: Option[String])
+
+
+
+/**
+ * New case class (including source attribution field).
+ *                                                    
+ */
+case class tweetCS(docid: String, createdat: java.sql.Timestamp, message: String, hashTags: String, source: String, location: Option[String])
+//case class tweetCS(docid: String, createdat: java.sql.Timestamp, message: String, hashTags: String, location: Option[String])
+
+case class reindexedtweetCS(docid: String, message: String, source: String, hashTags: String, location: Option[String])
 
 object SharedIndex {
   // twitter helper methods
@@ -37,13 +49,26 @@ object SharedIndex {
         }
       }
     val output = mapToOutput(fields)
-    output
+    println("panda tweet run: " + fields)
+    output    
   }
-
-
+  
   def prepareTweetsCaseClass(tweet: twitter4j.Status) = {
-    tweetCS(tweet.getId().toString, tweet.getText(),
-      tweet.getHashtagEntities().map(_.getText()).mkString(" "),
+    
+    
+    val x = tweet.getCreatedAt()
+    val y = new java.sql.Timestamp(x.getTime())
+    
+    var source = tweet.getSource().toString()
+    var sourcepass = ""
+    
+    if(source matches ".*Android.*") {sourcepass = "mobile";} 
+    else if (source matches ".*iPhone.*") sourcepass = "mobile"
+    else sourcepass = "web"
+    
+    tweetCS(tweet.getId().toString, y, tweet.getText(),
+      tweet.getHashtagEntities().map(_.getText()).mkString(" "),      
+      sourcepass,
       tweet.getGeoLocation() match {
         case null => None
         case loc => {
@@ -54,6 +79,7 @@ object SharedIndex {
       }
     )
   }
+  
 
   def setupTwitter(consumerKey: String, consumerSecret: String, accessToken: String, accessTokenSecret: String) ={
     // Set up the system properties for twitter

@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "org.eclipse.jetty"  % "jetty-client" % "8.1.14.v20131031",
   "com.typesafe.play" % "play-json_2.10" % "2.2.1",
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.3",
-  "org.elasticsearch" % "elasticsearch-hadoop" % "2.1.0.Beta2-holdenmagic",
+  "org.elasticsearch" % "elasticsearch-hadoop" % "2.1.0.Beta3",
   "net.sf.opencsv" % "opencsv" % "2.0",
   "com.twitter.elephantbird" % "elephant-bird" % "4.5",
   "com.twitter.elephantbird" % "elephant-bird-core" % "4.5",
@@ -27,6 +27,8 @@ libraryDependencies ++= Seq(
 )
 
 resolvers ++= Seq(
+   "clojars" at "https://clojars.org/repo",
+   "conjars" at "http://conjars.org/repo",
    "JBoss Repository" at "http://repository.jboss.org/nexus/content/repositories/releases/",
    "Spray Repository" at "http://repo.spray.cc/",
    "Cloudera Repository" at "https://repository.cloudera.com/artifactory/cloudera-repos/",

@@ -24,9 +24,15 @@ import org.apache.hadoop.io.{MapWritable, Text, NullWritable}
 // Twitter imports
 import twitter4j.TwitterFactory
 
+import concurrent._
+import ExecutionContext.Implicits._
+import duration._
+
+
 object ReIndexTweets {
 
   def main(args: Array[String]) {
+    
     if (args.length < 5) {
       System.err.println("Usage ReIndexTweets <master> <key> <secret key> <access token> <access token secret>  <es-resource> [es-nodes]")
     }
@@ -38,9 +44,26 @@ object ReIndexTweets {
 
     SharedIndex.setupTwitter(consumerKey, consumerSecret, accessToken, accessTokenSecret)
 
+    /**
+     * SparkConf 
+     * Added: setAppName and set properties
+     * Changed: setMaster (testing)
+     */
     val conf = new SparkConf
-    conf.setMaster(args(0))
+    // Using setMaster explicitly (not from args(0)). 
+    conf.setMaster("local[4]")
+    conf.setAppName("IndexTweetsLive")
+    conf.set("spark.executor.memory","2g")
+    
+    conf.set("es.nodes", "localhost")
+    conf.set("es.port", "9200")
+    //conf.set("es.index.auto.create","true")
+    
+    // Create new fields on index automatically
+    conf.set("index.mapper.dynamic","true")
+    
     val sc = new SparkContext(conf)
+    
     val jobConf = SharedESConfig.setupEsOnSparkContext(sc, esResource, Some(esNodes))
     // RDD of input
     val currentTweets = sc.hadoopRDD(jobConf, classOf[EsInputFormat[Object, MapWritable]], classOf[Object], classOf[MapWritable])
@@ -48,25 +71,31 @@ object ReIndexTweets {
     // Convert the MapWritable[Text, Text] to Map[String, String]
     val tweets = currentTweets.map{ case (key, value) => SharedIndex.mapWritableToInput(value) }
     println(tweets.take(5).mkString(":"))
-    val tweet4jtweets = tweets.sample(false, 0.00001).flatMap{ tweet =>
-    try {
-      val twitter = TwitterFactory.getSingleton()
-      val tweetID = tweet.getOrElse("docid", "")
-      Option(twitter.showStatus(tweetID.toLong))
-    } catch {
-      case e : Exception => {
-        println("Failed fetching a tweet, skipping "+e)
-        None
-      }
+    var rateLimit = 0
+    var deadline = 15.minutes.fromNow
+    val tweet4jtweets = tweets.sample(false, 0.01).flatMap{ tweet =>
+      //rateLimit += 1
+      //if (rateLimit >= 150) {println("panda Waiting for Twitter rate limits to be pulled: go grab coffee!"); Thread.sleep(deadline.timeLeft.toMillis); rateLimit = 0; deadline = 16.minutes.fromNow; }
+        try {
+          val twitter = TwitterFactory.getSingleton()
+          val tweetID = tweet.getOrElse("docid", "")
+          Option(twitter.showStatus(tweetID.toLong))
+        } catch {
+          case e : Exception => {
+            println("Failed fetching a tweet, skipping "+e)
+            None
+          }
     }}
     tweet4jtweets.cache()
     println("Updating "+tweet4jtweets.count())
     // Old way
-    tweet4jtweets.map(SharedIndex.prepareTweets).saveAsHadoopDataset(jobConf)
+    //tweet4jtweets.map(SharedIndex.prepareTweets).saveAsHadoopDataset(jobConf)
     // New way
     val sqlCtx = new SQLContext(sc)
     import sqlCtx.createSchemaRDD
-    val tweetsAsCS = createSchemaRDD(tweet4jtweets.map(SharedIndex.prepareTweetsCaseClass))
-    tweetsAsCS.saveToEs(esResource)
+    val tweetsAsCS = createSchemaRDD(tweet4jtweets.map(SharedIndex.prepareTweetsCaseClass)) 
+    println("Saving")
+    tweetsAsCS.saveToEs("twitter/tweet")
+    println("Saved")
   }
 }
